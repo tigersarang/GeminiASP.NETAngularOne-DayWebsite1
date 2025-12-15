@@ -1,0 +1,23 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+mat-card {
+  width: 400px;
+  padding: 20px;
+}
+.full-width {
+  width: 100%;
+  margin-bottom: 15px;
+}
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.link {
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #3f51b5;
+}

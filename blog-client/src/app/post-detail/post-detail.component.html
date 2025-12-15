@@ -1,0 +1,42 @@
+<div class="detail-container">
+
+  <div *ngIf="isLoading" class="loading-shade">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-msg">
+    <mat-icon color="warn">error</mat-icon>
+    <p>{{ errorMessage }}</p>
+    <button mat-button routerLink="/posts">Go Back</button>
+  </div>
+
+  <mat-card *ngIf="post && !isLoading" class="post-card">
+
+    <mat-card-header>
+      <mat-card-title class="post-title">{{ post.title }}</mat-card-title>
+      <mat-card-subtitle class="post-meta">
+        <span class="date">{{ post.createdAt | date:'mediumDate' }}</span>
+        <span class="separator">|</span>
+        <span class="author">By {{ post.author }}</span>
+        <span class="separator">|</span>
+        <mat-chip-listbox>
+           <mat-chip-option color="primary" selected>{{ post.category }}</mat-chip-option>
+        </mat-chip-listbox>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content>
+      <div class="post-content" [innerHTML]="post.content"></div>
+    </mat-card-content>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-actions align="end">
+      <button mat-button routerLink="/posts">
+        <mat-icon>arrow_back</mat-icon> Back to List
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

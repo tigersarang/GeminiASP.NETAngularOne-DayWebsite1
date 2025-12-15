@@ -1,0 +1,60 @@
+<mat-divider style="margin: 10px 0"></mat-divider>
+
+<mat-nav-list>
+  <a
+    mat-list-item
+    routerLink="/posts"
+    [queryParams]="{ categoryId: null }"
+    [class.active-link]="
+      !currentCategoryId && !route.snapshot.url.toString().includes('admin')
+    "
+    (click)="onLinkClick()"
+  >
+    <mat-icon matListItemIcon>home</mat-icon>
+    <span matListItemTitle>HOME</span>
+  </a>
+
+  @for (cat of categories; track cat.id) {
+  <a
+    mat-list-item
+    [routerLink]="['/posts']"
+    [queryParams]="{ categoryId: cat.id }"
+    [class.active-link]="currentCategoryId === cat.id"
+    (click)="onLinkClick()"
+  >
+    <mat-icon matListItemIcon>label</mat-icon>
+    <span matListItemTitle>{{ cat.name }}</span>
+  </a>
+  }
+
+  <ng-container *ngIf="authService.isAdmin">
+    <mat-divider style="margin: 10px 0"></mat-divider>
+    <div mat-subheader>Administration</div>
+
+    <a
+      mat-list-item
+      routerLink="/admin/categories"
+      routerLinkActive="active-link"
+      (click)="onLinkClick()"
+    >
+      <mat-icon matListItemIcon>settings</mat-icon>
+      <span matListItemTitle>Manage Categories</span>
+    </a>
+
+    <a
+      mat-list-item
+      routerLink="/write"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [class.active-link]="
+        !currentCategoryId &&
+        route.snapshot.url.length > 0 &&
+        route.snapshot.url[0].path === 'write'
+      "
+      (click)="onLinkClick()"
+    >
+      <mat-icon matListItemIcon>edit</mat-icon>
+      <span matListItemTitle>Write Post</span>
+    </a>
+  </ng-container>
+</mat-nav-list>

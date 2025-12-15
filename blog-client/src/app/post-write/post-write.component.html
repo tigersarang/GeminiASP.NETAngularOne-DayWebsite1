@@ -1,0 +1,38 @@
+<div class="write-container">
+  <h2>Write New Post</h2>
+
+  <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="write-form">
+    <div class="row">
+
+      <mat-form-field appearance="outline" class="category-field">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category">
+          @for (cat of categories; track cat.id) {
+            <mat-option [value]="cat.name">{{ cat.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="title-field">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter post title">
+        <mat-error>Required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <angular-editor formControlName="content" [config]="editorConfig"></angular-editor>
+
+    <div *ngIf="postForm.get('content')?.touched && postForm.get('content')?.invalid" class="editor-error">
+      Content is required.
+    </div>
+
+    <div class="actions">
+      <button mat-stroked-button color="warn" type="button" routerLink="/posts">Cancel</button>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="postForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Publishing...' : 'Publish' }}
+      </button>
+    </div>
+  </form>
+</div>

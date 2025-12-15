@@ -1,0 +1,35 @@
+/* src/app/app.component.scss */
+
+.sidenav-container {
+  height: calc(100vh - 64px);
+}
+
+.main-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.sidenav {
+  width: 280px;
+  border-right: none;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+  background-color: #ffffff;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.content-wrapper {
+  padding: 30px;
+  background-color: #f5f7fa;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .sidenav { width: 260px; }
+  .content-wrapper { padding: 15px; }
+}

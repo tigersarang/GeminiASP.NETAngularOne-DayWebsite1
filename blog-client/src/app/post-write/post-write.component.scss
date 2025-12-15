@@ -1,0 +1,51 @@
+.write-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.category-field {
+  width: 180px;
+}
+
+.title-field {
+  flex: 1;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.editor-error {
+  color: #f44336; /* MatError Color */
+  font-size: 0.75rem;
+  margin-top: 5px;
+  margin-left: 10px;
+}
+
+::ng-deep .angular-editor-textarea {
+  min-height: 300px !important;
+}
+
+/* 모바일 대응 */
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+    gap: 0;
+  }
+  .category-field {
+    width: 100%;
+  }
+}

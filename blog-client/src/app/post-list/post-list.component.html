@@ -1,0 +1,56 @@
+<div class="container">
+  <div *ngIf="isLoading" class="loading-shade">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <div class="list-container" *ngIf="!isLoading">
+    <div class="header-row">
+      <h2>{{ pageTitle }}</h2>
+
+      <button
+        *ngIf="authService.isAdmin"
+        mat-raised-button
+        color="accent"
+        [routerLink]="['/write']"
+        [queryParams]="{ categoryId: currentCategoryId }"
+      >
+        <mat-icon>edit</mat-icon> Write New
+      </button>
+    </div>
+
+    <div *ngIf="posts.length === 0" class="no-posts">
+      <p>등록된 게시글이 없습니다. 첫 글을 작성해보세요!</p>
+    </div>
+
+    @for (post of posts; track post.id) {
+    <mat-card class="post-card" [routerLink]="['/posts', post.id]">
+      <mat-card-header>
+        <div mat-card-avatar class="header-image"></div>
+        <mat-card-title>{{ post.title }}</mat-card-title>
+        <mat-card-subtitle
+          >{{ post.createdAt | date : "mediumDate" }} |
+          {{ post.author }}</mat-card-subtitle
+        >
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="summary-text" [innerHTML]="post.content"></div>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button mat-button color="primary">READ MORE</button>
+      </mat-card-actions>
+    </mat-card>
+    }
+
+    <mat-paginator
+      [length]="totalCount"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [pageIndex]="pageIndex"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  </div>
+</div>

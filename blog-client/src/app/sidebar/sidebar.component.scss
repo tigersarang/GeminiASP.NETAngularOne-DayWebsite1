@@ -1,0 +1,59 @@
+/* src/app/core/components/sidebar/sidebar.component.scss */
+
+.profile-section {
+  padding: 40px 20px 30px 30px;
+  background: #f9fafb;
+  margin-bottom: 10px;
+
+  h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #3f51b5;
+  }
+
+  p {
+    margin: 5px 0 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+}
+
+mat-nav-list {
+  padding-top: 0;
+
+  a[mat-list-item] {
+    padding-left: 25px !important;
+    font-size: 1rem;
+    color: #444;
+
+    &:hover {
+      background-color: #f0f2f5;
+      color: #3f51b5;
+    }
+
+    mat-icon {
+      margin-right: 15px;
+      color: #757575;
+    }
+  }
+
+  .active-link {
+    background-color: #e8eaf6 !important;
+    color: #3f51b5 !important;
+    border-right: 3px solid #3f51b5;
+
+    mat-icon {
+      color: #3f51b5 !important;
+    }
+  }
+}
+
+div[mat-subheader] {
+  padding-left: 30px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

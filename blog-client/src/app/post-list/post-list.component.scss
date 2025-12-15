@@ -1,0 +1,93 @@
+/* src/app/features/post-list/post-list.component.scss */
+
+.container {
+  padding: 20px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  position: relative; /* 로딩 스피너 위치 잡기 위함 */
+}
+
+.list-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.no-posts {
+  text-align: center;
+  padding: 50px;
+  color: #888;
+  font-size: 1.1rem;
+}
+
+.post-card {
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  }
+
+  mat-card-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+}
+
+.header-image {
+  background-color: #3f51b5;
+}
+
+.summary-text {
+  color: #555;
+  margin: 10px 0;
+  line-height: 1.6;
+
+  /* [추가] 멀티라인 말줄임표 처리 (3줄 넘어가면 ...) */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 보여줄 줄 수 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* HTML 내부의 이미지가 너무 커서 목록을 망치지 않도록 제한 */
+  ::ng-deep img {
+    display: none; /* 목록에서는 이미지를 숨기는 것이 깔끔함 */
+    /* 만약 이미지를 보여주고 싶다면 아래 주석 해제 */
+    /* max-width: 100%; height: auto; */
+  }
+
+  /* HTML 태그들의 기본 마진 제거하여 간격 일정하게 유지 */
+  ::ng-deep p {
+    margin: 0;
+  }
+}
+
+/* 모바일 대응 */
+@media (max-width: 600px) {
+  .container { padding: 10px; }
+  .fab-bottom-right { bottom: 20px; right: 20px; }
+}

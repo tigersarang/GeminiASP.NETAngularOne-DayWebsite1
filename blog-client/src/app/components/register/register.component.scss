@@ -1,0 +1,43 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  padding: 20px;
+}
+
+mat-card {
+  width: 100%;
+  max-width: 400px; /* 너무 넓어지지 않게 제한 */
+  padding: 20px;
+}
+
+mat-card-header {
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+
+  button {
+    min-width: 100px;
+  }
+}
+
+.link {
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #3f51b5;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
