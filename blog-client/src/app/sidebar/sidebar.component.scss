@@ -57,3 +57,41 @@ div[mat-subheader] {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
+.category-panel {
+  background: transparent !important; /* 사이드바 배경색과 일치시킴 */
+
+  /* 아코디언 헤더 스타일 */
+  ::ng-deep .mat-expansion-panel-header {
+    padding: 0 16px;
+    height: 48px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  /* 활성화된 자식이 있을 때 패널 내부 배경 */
+  ::ng-deep .mat-expansion-panel-content {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+
+  /* 확장 패널 내부 패딩 제거 (mat-list와 맞추기 위함) */
+  ::ng-deep .mat-expansion-panel-body {
+    padding: 0 !important;
+  }
+}
+
+/* 활성화된 링크 스타일 (기존 active-link와 동일) */
+.active-link {
+  color: #3f51b5 !important; // Primary Color
+  background: rgba(63, 81, 181, 0.1);
+
+  mat-icon {
+    color: #3f51b5;
+  }
+}
+
+mat-nav-list {
+  padding-top: 0;
+}

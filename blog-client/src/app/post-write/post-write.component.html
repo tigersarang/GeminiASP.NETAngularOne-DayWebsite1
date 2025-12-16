@@ -23,6 +23,16 @@
 
     <angular-editor formControlName="content" [config]="editorConfig"></angular-editor>
 
+
+    <div class="row">
+      <mat-label style="margin-right: 10px; font-weight:bold;">Attachment:</mat-label>
+      <input type="file" (change)="onFileSelected($event)">
+
+      <span *ngIf="selectedFile" style="margin-left: 10px; color: green;">
+        {{ selectedFile.name }}
+      </span>
+    </div>
+
     <div *ngIf="postForm.get('content')?.touched && postForm.get('content')?.invalid" class="editor-error">
       Content is required.
     </div>
@@ -34,5 +44,7 @@
         {{ isSubmitting ? 'Publishing...' : 'Publish' }}
       </button>
     </div>
+
+
   </form>
 </div>

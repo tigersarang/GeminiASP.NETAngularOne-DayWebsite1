@@ -55,6 +55,8 @@ export class PostWriteComponent implements OnInit {
   isSubmitting = false;
   catIdStr?: string;
 
+  selectedFile: File | null = null; // 선택된 파일 저장
+
   // 에디터 설정
   editorConfig = {
     editable: true,
@@ -125,14 +127,19 @@ onSubmit() {
     this.isSubmitting = true;
     const formValue = this.postForm.value;
 
-    const newPost = {
-      title: formValue.title,
-      content: formValue.content,
-      category: formValue.category,
-      author: 'DevMaster'
-    };
+   // [중요] JSON 대신 FormData 생성
+    const formData = new FormData();
+    formData.append('title', formValue.title);
+    formData.append('content', formValue.content);
+    formData.append('category', formValue.category);
+    formData.append('author', 'DevMaster'); // 혹은 로그인 유저
 
-    this.postService.createPost(newPost).subscribe({
+    // 파일이 있으면 추가
+    if (this.selectedFile) {
+      formData.append('file', this.selectedFile);
+    }
+
+    this.postService.createPost(formData).subscribe({
       next: (res) => {
         this.showNotification('게시글이 성공적으로 등록되었습니다! 🎉', '확인', true);
         this.isSubmitting = false;
@@ -170,6 +177,13 @@ onSubmit() {
       horizontalPosition: 'center', // 가운데 정렬
       panelClass: isSuccess ? ['success-snackbar'] : ['error-snackbar'] // (선택) 스타일 클래스 추가 가능
     });
+  }
+
+    onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
   }
 
 }

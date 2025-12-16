@@ -3,10 +3,22 @@ using BlogServer.Data;
 using BlogServer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 524_288_000; 
+});
+
+// [추가] 2. Multipart Form 데이터 길이 제한 해제
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 524_288_000; 
+});
 
 // Add services to the container.
 
@@ -73,6 +85,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
+        context.Database.Migrate();
         // 방금 만든 초기화 클래스 호출!
         DbInitializer.Initialize(context);
     }

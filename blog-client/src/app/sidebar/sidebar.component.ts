@@ -6,6 +6,8 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { CategoryService } from '../services/category.service';
 import { Category } from '../models/category';
 import { AuthService } from '../auth.service';
@@ -19,6 +21,8 @@ import { AuthService } from '../auth.service';
     MatListModule,
     MatIconModule,
     MatDividerModule,
+    MatExpansionModule,
+    MatButtonModule
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
@@ -28,7 +32,8 @@ export class SidebarComponent implements OnInit {
   private categoryService = inject(CategoryService);
   route = inject(ActivatedRoute); // [추가]
 
-  categories: Category[] = [];
+  // 트리 구조로 변환된 카테고리를 저장할 변수
+  categoryTree: Category[] = [];
   currentCategoryId?: number; // 현재 URL의 카테고리 ID 저장용
 
   currentUser$ = this.authService.currentUser$;
@@ -49,9 +54,10 @@ export class SidebarComponent implements OnInit {
   loadCategories() {
     this.categoryService.getAll().subscribe({
       next: (data) => {
-        this.categories = data;
+        // [핵심] 서버에서 받은 평탄한 리스트를 트리 구조로 변환
+        this.categoryTree = this.buildCategoryTree(data);
       },
-      error: (err) => console.error('Failed to load categories', err),
+      error: (err) => console.error(err),
     });
   }
 
@@ -63,5 +69,31 @@ export class SidebarComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.onLinkClick();
+  }
+
+  buildCategoryTree(categories: Category[]): Category[] {
+    const map = new Map<number, Category>();
+    const roots: Category[] = [];
+
+    // 1. 모든 카테고리를 맵에 등록하고 children 배열 초기화
+    categories.forEach((cat) => {
+      map.set(cat.id, { ...cat, children: [] });
+    });
+
+    // 2. 부모-자식 연결
+    categories.forEach((cat) => {
+      if (cat.parentId) {
+        // 부모가 있으면 부모의 children에 추가
+        const parent = map.get(cat.parentId);
+        if (parent) {
+          parent.children?.push(map.get(cat.id)!);
+        }
+      } else {
+        // 부모가 없으면 최상위(Root) 노드
+        roots.push(map.get(cat.id)!);
+      }
+    });
+
+    return roots;
   }
 }

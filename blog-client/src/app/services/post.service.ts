@@ -7,7 +7,7 @@ import { PagedResult } from '../models/paged-result';
 import { BlogPost } from '../models/post';
 
 @Injectable({
-  providedIn: 'root' // 전역에서 사용 가능
+  providedIn: 'root', // 전역에서 사용 가능
 })
 export class PostService {
   private http = inject(HttpClient);
@@ -16,7 +16,11 @@ export class PostService {
   private baseUrl = 'http://localhost:5000/api/posts';
 
   // 페이징된 게시글 목록 가져오기
-getPosts(page: number, pageSize: number, categoryId?: number): Observable<PagedResult<BlogPost>> {
+  getPosts(
+    page: number,
+    pageSize: number,
+    categoryId?: number
+  ): Observable<PagedResult<BlogPost>> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
@@ -35,7 +39,16 @@ getPosts(page: number, pageSize: number, categoryId?: number): Observable<PagedR
   }
 
   // 글쓰기 (POST)
-  createPost(post: Partial<BlogPost>): Observable<BlogPost> {
-    return this.http.post<BlogPost>(this.baseUrl, post);
+  createPost(postData: FormData): Observable<BlogPost> {
+    return this.http.post<BlogPost>(this.baseUrl, postData);
+  }
+
+  downloadFile(postId: number): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/download/${postId}`, {
+      responseType: 'blob', // 중요: 바이너리 데이터로 받음
+    });
+  }
+  deletePost(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

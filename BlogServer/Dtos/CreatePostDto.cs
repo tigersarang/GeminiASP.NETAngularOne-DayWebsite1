@@ -20,5 +20,6 @@ public class CreatePostDto
         
         // 작성자는 나중에 JWT에서 추출하므로 지금은 클라이언트가 보내거나 서버가 임시 설정
         public string Author { get; set; } = "DevMaster"; 
+        public IFormFile? File { get; set; }
     }
 }

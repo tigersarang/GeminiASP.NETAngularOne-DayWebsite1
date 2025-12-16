@@ -14,18 +14,51 @@
     <span matListItemTitle>HOME</span>
   </a>
 
-  @for (cat of categories; track cat.id) {
-  <a
-    mat-list-item
-    [routerLink]="['/posts']"
-    [queryParams]="{ categoryId: cat.id }"
-    [class.active-link]="currentCategoryId === cat.id"
-    (click)="onLinkClick()"
-  >
-    <mat-icon matListItemIcon>label</mat-icon>
-    <span matListItemTitle>{{ cat.name }}</span>
-  </a>
-  }
+ <mat-divider style="margin: 10px 0;"></mat-divider>
+  <div mat-subheader>Categories</div>
+
+  <mat-accordion displayMode="flat" multi>
+
+    @for (parent of categoryTree; track parent.id) {
+
+      @if (parent.children && parent.children.length > 0) {
+        <mat-expansion-panel class="category-panel" [class.mat-elevation-z0]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon style="margin-right: 16px;">folder</mat-icon>
+              {{ parent.name }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <mat-nav-list dense>
+            @for (child of parent.children; track child.id) {
+              <a mat-list-item
+                 [routerLink]="['/posts']"
+                 [queryParams]="{ categoryId: child.id }"
+                 [class.active-link]="currentCategoryId === child.id"
+                 style="padding-left: 20px;"
+                 (click)="onLinkClick()">
+                <mat-icon matListItemIcon>subdirectory_arrow_right</mat-icon>
+                <span matListItemTitle>{{ child.name }}</span>
+              </a>
+            }
+          </mat-nav-list>
+        </mat-expansion-panel>
+      }
+
+      @else {
+        <a mat-list-item
+           [routerLink]="['/posts']"
+           [queryParams]="{ categoryId: parent.id }"
+           [class.active-link]="currentCategoryId === parent.id"
+           (click)="onLinkClick()">
+          <mat-icon matListItemIcon>label</mat-icon>
+          <span matListItemTitle>{{ parent.name }}</span>
+        </a>
+      }
+    }
+
+  </mat-accordion>
 
   <ng-container *ngIf="authService.isAdmin">
     <mat-divider style="margin: 10px 0"></mat-divider>

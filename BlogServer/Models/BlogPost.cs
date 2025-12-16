@@ -24,5 +24,8 @@ public class BlogPost
         public string Category { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public string? AttachmentPath { get; set; } // 서버에 저장된 실제 경로
+        public string? AttachmentName { get; set; } // 사용자가 올린 원본 파일명
     }
 }

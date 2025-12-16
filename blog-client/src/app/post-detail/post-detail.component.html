@@ -1,5 +1,4 @@
 <div class="detail-container">
-
   <div *ngIf="isLoading" class="loading-shade">
     <mat-spinner diameter="50"></mat-spinner>
   </div>
@@ -11,16 +10,17 @@
   </div>
 
   <mat-card *ngIf="post && !isLoading" class="post-card">
-
     <mat-card-header>
       <mat-card-title class="post-title">{{ post.title }}</mat-card-title>
       <mat-card-subtitle class="post-meta">
-        <span class="date">{{ post.createdAt | date:'mediumDate' }}</span>
+        <span class="date">{{ post.createdAt | date : "mediumDate" }}</span>
         <span class="separator">|</span>
         <span class="author">By {{ post.author }}</span>
         <span class="separator">|</span>
         <mat-chip-listbox>
-           <mat-chip-option color="primary" selected>{{ post.category }}</mat-chip-option>
+          <mat-chip-option color="primary" selected>{{
+            post.category
+          }}</mat-chip-option>
         </mat-chip-listbox>
       </mat-card-subtitle>
     </mat-card-header>
@@ -33,9 +33,23 @@
 
     <mat-divider></mat-divider>
 
+    <div class="attachment-section" *ngIf="post.attachmentName">
+      <mat-icon>attachment</mat-icon>
+      <span class="filename">{{ post.attachmentName }}</span>
+
+      <button mat-stroked-button color="primary" (click)="downloadFile()">
+        <mat-icon>download</mat-icon> Download
+      </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
     <mat-card-actions align="end">
       <button mat-button routerLink="/posts">
         <mat-icon>arrow_back</mat-icon> Back to List
+      </button>
+      <button *ngIf="authService.isAdmin" mat-button color="warn" (click)="deletePost()">
+        <mat-icon>delete</mat-icon> Delete Post
       </button>
     </mat-card-actions>
   </mat-card>

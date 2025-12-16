@@ -16,6 +16,7 @@ namespace BlogServer.Services
         Task<PagedResult<BlogPost>> GetPostsAsync(int page, int pageSize, int? categoryId = null);
         Task<BlogPost> CreatePostAsync(BlogPost post);
         Task<BlogPost?> GetPostByIdAsync(int id);
+        Task DeletePostAsync(int id);
     }
 
     public class BlogService : IBlogService
@@ -94,6 +95,19 @@ namespace BlogServer.Services
         public async Task<BlogPost?> GetPostByIdAsync(int id)
         {
             return await _context.BlogPosts.FindAsync(id);
+        }
+
+        public async Task DeletePostAsync(int id)
+        {
+            var post = await _context.BlogPosts.FindAsync(id);
+            if (post != null)
+            {
+                _context.BlogPosts.Remove(post);
+                await _context.SaveChangesAsync();
+
+                // 캐시 초기화 (TotalCount 등이 바뀌므로)
+                _cache.Remove(CacheKeyTotalCount);
+            }
         }
     }
 }
