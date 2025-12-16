@@ -1,3 +1,5 @@
+Simple explanation site url : https://blog.allres.co.kr/Board/Detail/3099/ANGULAR
+
 The screen is composed of the following elements:
 
 <img width="1280" height="528" alt="image" src="https://github.com/user-attachments/assets/721a901f-e1a0-467d-9d02-18c32b1f7e7d" />
