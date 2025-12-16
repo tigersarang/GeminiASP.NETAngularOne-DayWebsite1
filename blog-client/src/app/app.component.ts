@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { SidebarComponent } from './sidebar/sidebar.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AuthService } from './auth.service';
 import { ChangePasswordDialogComponent } from './components/change-password-dialog/change-password-dialog.component';

@@ -18,9 +18,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 // 3rd Party
 import { AngularEditorModule } from '@kolkov/angular-editor';
-import { PostService } from '../services/post.service';
-import { CategoryService } from '../services/category.service';
-import { Category } from '../models/category';
+import { PostService } from '../../services/post.service';
+import { CategoryService } from '../../services/category.service';
+import { Category } from '../../models/category';
 
 // Services & Models
 

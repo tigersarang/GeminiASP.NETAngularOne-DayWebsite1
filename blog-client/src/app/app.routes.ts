@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { PostListComponent } from './post-list/post-list.component';
-import { PostDetailComponent } from './post-detail/post-detail.component';
-import { PostWriteComponent } from './post-write/post-write.component';
+import { PostListComponent } from './components/post-list/post-list.component';
+import { PostDetailComponent } from './components/post-detail/post-detail.component';
+import { PostWriteComponent } from './components/post-write/post-write.component';
 import { CategoryListComponent } from './admin/category-list/category-list.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';

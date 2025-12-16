@@ -8,9 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { CategoryService } from '../services/category.service';
-import { Category } from '../models/category';
-import { AuthService } from '../auth.service';
+import { CategoryService } from '../../services/category.service';
+import { Category } from '../../models/category';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-sidebar',

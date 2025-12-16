@@ -7,9 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
-import { PostService } from '../services/post.service';
-import { BlogPost } from '../models/post';
-import { AuthService } from '../auth.service';
+import { PostService } from '../../services/post.service';
+import { BlogPost } from '../../models/post';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-post-detail',
