@@ -23,14 +23,9 @@ export const routes: Routes = [
   // 3. 게시글 상세 보기 (:id 파라미터)
   { path: 'posts/:id', component: PostDetailComponent },
 
-  // 4. 글쓰기 페이지
-  { path: 'write', component: PostWriteComponent },
-
   // 5. 관리자 - 카테고리 관리
   { path: 'admin/categories', component: CategoryListComponent },
 
-  // 6. 예외 처리: 잘못된 URL은 홈으로 보냄
-  { path: '**', redirectTo: 'posts' },
   {
     path: 'write',
     component: PostWriteComponent,
@@ -46,4 +41,7 @@ export const routes: Routes = [
     component: CategoryListComponent,
     canActivate: [adminGuard], // [추가] 관리자만 접근 가능
   },
+  // 6. 예외 처리: 잘못된 URL은 홈으로 보냄
+  { path: '**', redirectTo: 'posts' },
+
 ];

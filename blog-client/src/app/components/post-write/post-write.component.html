@@ -1,7 +1,33 @@
 <div class="write-container">
-  <h2>{{ isEditMode ? 'Edit Post' : 'Write New Post' }}</h2>
+  <h2>{{ isEditMode ? "Edit Post" : "Write New Post" }}</h2>
 
-  <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="write-form">
+    <div class="row">
+      <mat-form-field appearance="outline" class="category-field">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category">
+          @for (cat of categories; track cat.id) {
+          <mat-option [value]="cat.name">{{ cat.name }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="title-field">
+        <mat-label>Title</mat-label>
+        <input
+          matInput
+          formControlName="title"
+          placeholder="Enter post title"
+        />
+        <mat-error>Required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <angular-editor
+      formControlName="content"
+      [config]="editorConfig"
+    ></angular-editor>
 
     <div class="row" style="margin: 20px 0;">
       <mat-label style="margin-right: 10px; font-weight:bold;">Attachment:</mat-label>
@@ -18,12 +44,18 @@
     </div>
 
     <div class="actions">
-      <button mat-button type="button" routerLink="/posts">Cancel</button>
-      <button mat-raised-button color="primary" type="submit"
-              [disabled]="postForm.invalid || isSubmitting">
-        {{ isEditMode ? 'Update' : 'Publish' }}
+      <button mat-stroked-button color="warn" type="button" routerLink="/posts">
+        Cancel
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="postForm.invalid || isSubmitting"
+      >
+        {{ isEditMode ? "Update" : "Publish" }}
       </button>
     </div>
-
   </form>
 </div>
