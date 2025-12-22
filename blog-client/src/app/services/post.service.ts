@@ -51,4 +51,7 @@ export class PostService {
   deletePost(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+  updatePost(id: number, postData: FormData): Observable<BlogPost> {
+    return this.http.put<BlogPost>(`${this.baseUrl}/${id}`, postData);
+  }
 }

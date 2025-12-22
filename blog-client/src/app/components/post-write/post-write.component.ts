@@ -57,6 +57,12 @@ export class PostWriteComponent implements OnInit {
 
   selectedFile: File | null = null; // 선택된 파일 저장
 
+  isEditMode = false; // 수정 모드 여부
+  postId: number | null = null; // 수정할 글 ID
+
+  // 기존 파일명을 보여주기 위한 변수
+  existingFileName: string | null = null;
+
   // 에디터 설정
   editorConfig = {
     editable: true,
@@ -71,8 +77,15 @@ export class PostWriteComponent implements OnInit {
 
   ngOnInit() {
     this.initForm();
-    // 카테고리 로드 후 -> URL 파라미터 확인 순서로 진행
-    this.loadCategoriesAndSetDefault();
+    this.loadCategories();
+
+    // [핵심] URL에 id 파라미터가 있는지 확인
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.isEditMode = true;
+      this.postId = Number(idParam);
+      this.loadPostData(this.postId); // 기존 데이터 불러오기
+    }
   }
 
   // 1. 폼 초기화
@@ -118,16 +131,20 @@ export class PostWriteComponent implements OnInit {
   }
 
   // 3. 작성 완료 (Submit)
-onSubmit() {
+  onSubmit() {
     if (this.postForm.invalid) {
-      this.showNotification('제목과 내용, 카테고리를 모두 입력해주세요.', '닫기', false);
+      this.showNotification(
+        '제목과 내용, 카테고리를 모두 입력해주세요.',
+        '닫기',
+        false
+      );
       return;
     }
 
     this.isSubmitting = true;
     const formValue = this.postForm.value;
 
-   // [중요] JSON 대신 FormData 생성
+    // [중요] JSON 대신 FormData 생성
     const formData = new FormData();
     formData.append('title', formValue.title);
     formData.append('content', formValue.content);
@@ -139,51 +156,94 @@ onSubmit() {
       formData.append('file', this.selectedFile);
     }
 
-    this.postService.createPost(formData).subscribe({
-      next: (res) => {
-        this.showNotification('게시글이 성공적으로 등록되었습니다! 🎉', '확인', true);
-        this.isSubmitting = false;
+    if (this.isEditMode && this.postId) {
+      // [수정 모드] Update 요청
+      this.postService.updatePost(this.postId, formData).subscribe({
+        next: () => {
+          this.showNotification('Post updated successfully!', 'Ok', true);
+          this.router.navigate(['/posts', this.postId]); // 상세 페이지로 이동
+        },
+        error: () => {
+          this.showNotification('Update failed.', 'Close', false);
+          this.isSubmitting = false;
+        },
+      });
+    } else {
+      this.postService.createPost(formData).subscribe({
+        next: (res) => {
+          this.showNotification(
+            '게시글이 성공적으로 등록되었습니다! 🎉',
+            '확인',
+            true
+          );
+          this.isSubmitting = false;
 
-        // [수정된 부분]
-        // 1. 방금 폼에서 선택한 카테고리 이름 가져오기
-        const selectedCatName = formValue.category;
+          // [수정된 부분]
+          // 1. 방금 폼에서 선택한 카테고리 이름 가져오기
+          const selectedCatName = formValue.category;
 
-        // 2. 전체 카테고리 목록에서 해당 이름과 일치하는 객체(ID 포함) 찾기
-        const targetCategory = this.categories.find(c => c.name === selectedCatName);
+          // 2. 전체 카테고리 목록에서 해당 이름과 일치하는 객체(ID 포함) 찾기
+          const targetCategory = this.categories.find(
+            (c) => c.name === selectedCatName
+          );
 
-        // 3. 해당 카테고리 ID를 파라미터로 넣어서 이동
-        if (targetCategory) {
-           this.router.navigate(['/posts'], {
-             queryParams: { categoryId: targetCategory.id }
-           });
-        } else {
-           // 만약 못 찾으면 그냥 전체 목록으로 이동 (Fallback)
-           this.router.navigate(['/posts']);
-        }
-      },
-      error: (err) => {
-        console.error(err);
-        this.showNotification('게시글 등록에 실패했습니다.', '닫기', false);
-        this.isSubmitting = false;
-      }
-    });
+          // 3. 해당 카테고리 ID를 파라미터로 넣어서 이동
+          if (targetCategory) {
+            this.router.navigate(['/posts'], {
+              queryParams: { categoryId: targetCategory.id },
+            });
+          } else {
+            // 만약 못 찾으면 그냥 전체 목록으로 이동 (Fallback)
+            this.router.navigate(['/posts']);
+          }
+        },
+        error: (err) => {
+          console.error(err);
+          this.showNotification('게시글 등록에 실패했습니다.', '닫기', false);
+          this.isSubmitting = false;
+        },
+      });
+    }
   }
 
-// [추가] 메시지 표시 헬퍼 메서드
-  private showNotification(message: string, action: string, isSuccess: boolean) {
+  // [추가] 메시지 표시 헬퍼 메서드
+  private showNotification(
+    message: string,
+    action: string,
+    isSuccess: boolean
+  ) {
     this.snackBar.open(message, action, {
       duration: 3000, // 3초 뒤 자동 사라짐
       verticalPosition: 'top', // [핵심] 'top'으로 설정하면 위쪽에 뜸
       horizontalPosition: 'center', // 가운데 정렬
-      panelClass: isSuccess ? ['success-snackbar'] : ['error-snackbar'] // (선택) 스타일 클래스 추가 가능
+      panelClass: isSuccess ? ['success-snackbar'] : ['error-snackbar'], // (선택) 스타일 클래스 추가 가능
     });
   }
 
-    onFileSelected(event: any) {
+  onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
     }
   }
 
+  loadPostData(id: number) {
+    this.postService.getPost(id).subscribe({
+      next: (post) => {
+        // 폼에 값 채워넣기 (patchValue)
+        this.postForm.patchValue({
+          title: post.title,
+          content: post.content,
+          category: post.category,
+        });
+
+        // 기존 첨부파일 이름 저장
+        this.existingFileName = post.attachmentName || null;
+      },
+      error: (err) => {
+        this.showNotification('Failed to load post data.', 'Close', false);
+        this.router.navigate(['/posts']);
+      },
+    });
+  }
 }

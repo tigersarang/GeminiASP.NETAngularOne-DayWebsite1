@@ -144,5 +144,62 @@ namespace BlogServer.Controllers
 
             return NoContent(); // 204 No Content (성공적으로 삭제됨)
         }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        [RequestSizeLimit(524_288_000)] // 500MB 제한
+        public async Task<IActionResult> UpdatePost(int id, [FromForm] CreatePostDto postDto)
+        {
+            var post = await _blogService.GetPostByIdAsync(id);
+            if (post == null) return NotFound();
+
+            // 1. 텍스트 정보 업데이트
+            post.Title = postDto.Title;
+            post.Content = postDto.Content;
+            post.Category = postDto.Category;
+            // post.Author는 수정하지 않음 (또는 필요시 수정)
+            // UpdatedAt 필드가 있다면 갱신: post.UpdatedAt = DateTime.UtcNow;
+
+            // 2. 파일 처리 로직
+            if (postDto.File != null && postDto.File.Length > 0)
+            {
+                // A. 기존 파일이 존재하면 삭제 (쓰레기 파일 방지)
+                if (!string.IsNullOrEmpty(post.AttachmentPath))
+                {
+                    var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", post.AttachmentPath);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
+                // B. 새 파일 저장
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(postDto.File.FileName);
+                var filePath = Path.Combine(uploadPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await postDto.File.CopyToAsync(stream);
+                }
+
+                // C. DB 정보 갱신
+                post.AttachmentName = postDto.File.FileName;
+                post.AttachmentPath = fileName;
+            }
+
+            // 3. DB 저장 (Service에 Update 메서드가 필요함)
+            // 여기서는 DbContext를 직접 사용하거나 Service에 UpdatePostAsync 추가 필요
+            // 편의상 _context 직접 사용 예시:
+            // _context.Entry(post).State = EntityState.Modified;
+            // await _context.SaveChangesAsync();
+
+            // 정석대로 Service 호출:
+            await _blogService.UpdatePostAsync(post);
+
+            return Ok(post);
+        }
     }
 }

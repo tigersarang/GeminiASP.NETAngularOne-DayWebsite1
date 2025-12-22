@@ -48,8 +48,14 @@
       <button mat-button routerLink="/posts">
         <mat-icon>arrow_back</mat-icon> Back to List
       </button>
+
+      <button *ngIf="authService.isAdmin" mat-button color="accent"
+              [routerLink]="['/edit', post?.id]">
+        <mat-icon>edit</mat-icon> Edit
+      </button>
+
       <button *ngIf="authService.isAdmin" mat-button color="warn" (click)="deletePost()">
-        <mat-icon>delete</mat-icon> Delete Post
+        <mat-icon>delete</mat-icon> Delete
       </button>
     </mat-card-actions>
   </mat-card>

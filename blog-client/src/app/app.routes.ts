@@ -37,6 +37,11 @@ export const routes: Routes = [
     canActivate: [adminGuard], // [추가] 관리자만 접근 가능
   },
   {
+    path: 'edit/:id',
+    component: PostWriteComponent,
+    canActivate: [adminGuard],
+  },
+  {
     path: 'admin/categories',
     component: CategoryListComponent,
     canActivate: [adminGuard], // [추가] 관리자만 접근 가능

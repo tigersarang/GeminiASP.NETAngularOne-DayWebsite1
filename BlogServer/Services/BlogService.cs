@@ -17,6 +17,7 @@ namespace BlogServer.Services
         Task<BlogPost> CreatePostAsync(BlogPost post);
         Task<BlogPost?> GetPostByIdAsync(int id);
         Task DeletePostAsync(int id);
+        Task UpdatePostAsync(BlogPost post);
     }
 
     public class BlogService : IBlogService
@@ -108,6 +109,13 @@ namespace BlogServer.Services
                 // 캐시 초기화 (TotalCount 등이 바뀌므로)
                 _cache.Remove(CacheKeyTotalCount);
             }
+        }
+
+        public async Task UpdatePostAsync(BlogPost post)
+        {
+            _context.BlogPosts.Update(post);
+            await _context.SaveChangesAsync();
+            _cache.Remove("BlogTotalCount"); // 필요시 캐시 삭제
         }
     }
 }
